@@ -1,26 +1,44 @@
 import axios from 'axios';
 
-const apiUrl = "https://localhost:7271"
+// הגדרת הכתובת הבסיסיתם
+axios.defaults.baseURL = "http://localhost:5024";
+
+// הוספת interceptor לתפיסת שגיאות
+axios.interceptors.response.use(
+    response => response,
+    error => {
+        console.error("שגיאת API:", error);
+        return Promise.reject(error);
+    }
+);
 
 export default {
-  getTasks: async () => {
-    const result = await axios.get(`${apiUrl}/items`)    
-    return result.data;
-  },
+    // שליפת משימות
+    getTasks: async () => {
+        const result = await axios.get(`/items`);    
+        return result.data;
+    },
 
-  addTask: async(name)=>{
-    console.log('addTask', name)
-    //TODO
-    return {};
-  },
+    // הוספת משימה חדשה
+    addTask: async (name) => {
+        // שולח אובייקט עם שם המשימה וסטטוס "לא בוצע"
+        const result = await axios.post(`/items`, { name: name, isComplete: false });
+        return result.data;
+    },
 
-  setCompleted: async(id, isComplete)=>{
-    console.log('setCompleted', {id, isComplete})
-    //TODO
-    return {};
-  },
+   // הוספת name כאן כדי שלא יימחק בעדכון
+    setCompleted: async (id, isComplete, name) => {
+        const result = await axios.put(`/items/${id}`, { 
+            id: id, 
+            name: name, 
+            isComplete: isComplete 
+        });
+        return result.data;
+    },
 
-  deleteTask:async()=>{
-    console.log('deleteTask')
-  }
+    // מחיקת משימה
+    deleteTask: async (id) => {
+        const result = await axios.delete(`/items/${id}`);
+        return result.data;
+    }
 };

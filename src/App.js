@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import service from './service.js';
-
+import './App.css';
 function App() {
   const [newTodo, setNewTodo] = useState("");
   const [todos, setTodos] = useState([]);
@@ -17,9 +17,10 @@ function App() {
     await getTodos();//refresh tasks list (in order to see the new one)
   }
 
+ // שולחים לשרת את האובייקט המלא כדי לשמור על השם
   async function updateCompleted(todo, isComplete) {
-    await service.setCompleted(todo.id, isComplete);
-    await getTodos();//refresh tasks list (in order to see the updated one)
+    await service.setCompleted(todo.id, isComplete, todo.name);
+    await getTodos();
   }
 
   async function deleteTodo(id) {
@@ -34,12 +35,25 @@ function App() {
   return (
     <section className="todoapp">
       <header className="header">
-        <h1>todos</h1>
+     {/* <header className="header"> */}
+  <h1>My Tasks</h1>
+  {/* <form onSubmit={createTodo}>
+    <input 
+      className="new-todo" 
+      placeholder="What needs to be done?" 
+      value={newTodo} 
+      onChange={(e) => setNewTodo(e.target.value)} 
+    />
+  </form> */}
+{/* </header> */}
         <form onSubmit={createTodo}>
           <input className="new-todo" placeholder="Well, let's take on the day" value={newTodo} onChange={(e) => setNewTodo(e.target.value)} />
+        
         </form>
       </header>
+       <p>      </p>
       <section className="main" style={{ display: "block" }}>
+       
         <ul className="todo-list">
           {todos.map(todo => {
             return (
