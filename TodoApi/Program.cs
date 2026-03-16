@@ -1,32 +1,59 @@
+// using Microsoft.EntityFrameworkCore;
+// using TodoApi; // ודאי שזה תואם ל-Namespace בקובץ Item.cs
+
+// var builder = WebApplication.CreateBuilder(args);
+
+// // --- רישום שירותים (Services) ---
+
+// // הזרקת ה-Context: מחבר את ה-API למסד הנתונים של ה-ToDo
+// builder.Services.AddDbContext<ToDoDbContext>();
+
+// // הוספת Swagger חלק א': מאפשר ל-API לחשוף את נקודות הקצה (Endpoints) שלו
+// builder.Services.AddEndpointsApiExplorer();
+
+// // הוספת Swagger חלק ב': מייצר את הממשק הגרפי שמאפשר לבדוק את ה-API בדפדפן
+// builder.Services.AddSwaggerGen();
+
+// // הגדרת CORS: מאפשר לאפליקציות חיצוניות (כמו ה-React שתבני) לגשת ל-API הזה
+
+// builder.Services.AddCors(options =>
+// {
+//     options.AddPolicy("AllowAll",
+//         policy => policy.AllowAnyOrigin() // מאפשר לכל אתר (כמו React) לגשת
+//                         .AllowAnyMethod() // מאפשר PUT, DELETE, POST
+//                         .AllowAnyHeader()); // מאפשר שליחת JSON
+// });
+// // יצירת האובייקט app - קורה פעם אחת בלבד!
+// // יצירת האובייקט app - קורה פעם אחת בלבד!
+// var app = builder.Build();
 using Microsoft.EntityFrameworkCore;
-using TodoApi; // ודאי שזה תואם ל-Namespace בקובץ Item.cs
+using TodoApi; 
 
 var builder = WebApplication.CreateBuilder(args);
 
 // --- רישום שירותים (Services) ---
 
-// הזרקת ה-Context: מחבר את ה-API למסד הנתונים של ה-ToDo
-builder.Services.AddDbContext<ToDoDbContext>();
+// הגדרת ה-ConnectionString עם הפרטים של Clever Cloud
+var connectionString = "Server=bsma6jabhyhy7zavpxez-mysql.services.clever-cloud.com;Database=bsma6jabhyhy7zavpxez;Uid=u7sifwqeu6qoac9r;Pwd=P5U6fX33y0p9N5mNPrf4;";
 
-// הוספת Swagger חלק א': מאפשר ל-API לחשוף את נקודות הקצה (Endpoints) שלו
+// הזרקת ה-Context עם הגדרת MySQL
+builder.Services.AddDbContext<ToDoDbContext>(options =>
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+
+// הוספת Swagger
 builder.Services.AddEndpointsApiExplorer();
-
-// הוספת Swagger חלק ב': מייצר את הממשק הגרפי שמאפשר לבדוק את ה-API בדפדפן
 builder.Services.AddSwaggerGen();
 
-// הגדרת CORS: מאפשר לאפליקציות חיצוניות (כמו ה-React שתבני) לגשת ל-API הזה
-
+// הגדרת CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
-        policy => policy.AllowAnyOrigin() // מאפשר לכל אתר (כמו React) לגשת
-                        .AllowAnyMethod() // מאפשר PUT, DELETE, POST
-                        .AllowAnyHeader()); // מאפשר שליחת JSON
+        policy => policy.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
 });
-// יצירת האובייקט app - קורה פעם אחת בלבד!
-// יצירת האובייקט app - קורה פעם אחת בלבד!
-var app = builder.Build();
 
+var app = builder.Build();
 // --- הוספה חדשה: יצירת הטבלאות באופן אוטומטי ---
 using (var scope = app.Services.CreateScope())
 {
