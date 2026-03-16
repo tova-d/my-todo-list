@@ -4,8 +4,7 @@ using TodoApi;
 var builder = WebApplication.CreateBuilder(args);
 
 // --- 1. הגדרת מסד הנתונים (Clever Cloud) ---
-var connectionString = "Server=bsma6jabhyhy7zavpxez-mysql.services.clever-cloud.com;Database=bsma6jabhyhy7zavpxez;Uid=u7sifwqeu6qoac9r;Pwd=P5U6fX33y0p9N5mNPrf4;";
-
+var connectionString = "server=bsma6jabhyhy7zavpxez-mysql.services.clever-cloud.com;database=bsma6jabhyhy7zavpxez;user=u7sifwqeu6qoac9r;password=P5U6fX33y0p9N5mNPrf4;port=3306;SslMode=None";
 builder.Services.AddDbContext<ToDoDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
